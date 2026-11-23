@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>طرائف الطعام — Taraif al-Taam</title>
+<style>
+:root{--g:#6fa543;--p:#c2386a;--bg:#f6eef0}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);font-family:system-ui,sans-serif;color:#3d1a20}
+.app{height:100%;display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1px solid #ead3d9;background:#fff}
+header h1{margin:0;font-size:17px;font-weight:600;color:var(--p)}
+header span{font-size:13px;color:#6b5a5f;direction:ltr}
+.stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:0;padding:16px;direction:rtl}
+.stage img{max-height:100%;max-width:100%;height:auto;background:#fff;box-shadow:0 6px 24px rgba(90,31,40,.18);display:block}
+.stage.spread img{max-width:50%}
+nav{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px 14px;flex-wrap:wrap}
+button{min-width:44px;min-height:44px;border:1px solid #d9b9c2;background:#fff;color:var(--p);font-size:20px;border-radius:22px;cursor:pointer}
+button:hover{background:#fdeef2}
+input[type=range]{width:min(420px,60vw);accent-color:var(--g);direction:rtl}
+label{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><h1>طرائف الطعام</h1><span id="count"></span></header>
+<main class="stage" id="stage" aria-live="polite"></main>
+<nav>
+<button id="prev" aria-label="Previous page">→</button>
+<label for="slider">Page</label><input id="slider" type="range" min="0" value="0">
+<button id="next" aria-label="Next page">←</button>
+</nav>
+</div>
+<script>
+const N=111, pages=[...Array(N)].map((_,i)=>'/taraif-al-taam/p/pg-'+String(i+1).padStart(3,'0')+'.jpg');
+const stage=document.getElementById('stage'), slider=document.getElementById('slider'), count=document.getElementById('count');
+let i=0;
+const wide=()=>innerWidth>900;
+// spreads: cover alone, then pairs (RTL: first of pair sits on the right)
+function view(){
+  stage.innerHTML='';
+  let idx=[i];
+  if(wide() && i>0){ const s=i%2===1?i:i-1; idx=[s]; if(s+1<N) idx.push(s+1); }
+  stage.className='stage'+(idx.length>1?' spread':'');
+  idx.forEach(k=>{const im=new Image();im.src=pages[k];im.alt='Page '+(k+1);stage.appendChild(im);});
+  [idx[idx.length-1]+1,idx[idx.length-1]+2].forEach(k=>{if(k<N){new Image().src=pages[k];}});
+  slider.max=N-1; slider.value=i;
+  count.textContent='Page '+idx.map(k=>k+1).join('–')+' of '+N;
+}
+function go(d){
+  const step=wide()&&i>0?2:1;
+  if(d>0){ i = wide()&&i>0 ? (i%2===1?i:i-1)+step : i+1; }
+  else { i = wide()&&i>2 ? (i%2===1?i:i-1)-step : Math.max(0,i-1); }
+  i=Math.max(0,Math.min(N-1,i)); view();
+}
+document.getElementById('next').onclick=()=>go(1);
+document.getElementById('prev').onclick=()=>go(-1);
+slider.oninput=()=>{i=+slider.value;view();};
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(1);if(e.key==='ArrowRight')go(-1);});
+let sx=null;
+stage.addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+stage.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>40)go(dx>0?1:-1);sx=null;});
+addEventListener('resize',view);
+view();
+</script>
+</body>
+</html>
