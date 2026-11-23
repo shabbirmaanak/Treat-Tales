@@ -19,7 +19,8 @@ nav{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px
 button{min-width:44px;min-height:44px;border:1px solid #d9b9c2;background:#fff;color:var(--p);font-size:20px;border-radius:22px;cursor:pointer}
 button:hover{background:#fdeef2}
 input[type=range]{width:min(420px,60vw);accent-color:var(--g);direction:rtl}
-label{position:absolute;left:-9999px}
+label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+html,body{overflow:hidden;touch-action:pan-y pinch-zoom}
 </style>
 </head>
 <body>
