@@ -7,10 +7,11 @@ import {
   ShoppingCart, 
   Bookmark, 
   PlusCircle, 
-  Menu, 
+  Menu,
   X,
   ChefHat,
-  Heart
+  Heart,
+  BookOpen
 } from 'lucide-react';
 
 export type NavTab = 'discover' | 'pantry' | 'planner' | 'grocery' | 'collections';
@@ -147,6 +148,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
               );
             })}
+            <a
+              href="/taraif-al-taam/"
+              className="relative flex items-center gap-2 px-3.5 py-2 rounded-full text-sm font-medium text-stone-600 hover:text-charcoal-900 hover:bg-stone-100/80 transition-all"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>طرائف الطعام</span>
+            </a>
           </nav>
 
           {/* Action Buttons */}
@@ -224,6 +232,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             );
           })}
+
+          <a
+            href="/taraif-al-taam/"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium text-stone-700 hover:bg-stone-50 transition-all"
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>طرائف الطعام (Cookbook)</span>
+          </a>
 
           <button
             onClick={() => {
